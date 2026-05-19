@@ -1,0 +1,3303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RevenuePilot | AI-Powered Revenue Governance Copilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      /* RevenuePilot – Light Sky Blue Theme */
+      --blue: #0284c7;
+      --blue-light: #38bdf8;
+      --blue-dim: #0369a1;
+      --blue-dark: #075985;
+      --blue-deeper: #0c4a6e;
+
+      --accent: #0ea5e9;
+      --accent-light: #bae6fd;
+      --accent-dim: #7dd3fc;
+
+      /* Nav / Footer BG – Sky Blue */
+      --nav-bg: #0284c7;
+      --footer-bg: #0c4a6e;
+
+      /* Page Backgrounds – White + very light sky tints */
+      --bg-white: #ffffff;
+      --bg-light: #f0f9ff;
+      --bg-section: #e0f2fe;
+      --bg-card: #ffffff;
+
+      --card-border: rgba(2, 132, 199, 0.18);
+      --card-border-strong: rgba(2, 132, 199, 0.38);
+
+      --text-dark: #0c1a2e;
+      --text-mid: #1e3a5f;
+      --text-muted: #4a7fa5;
+      --text-light: #7dafc8;
+      --white: #FFFFFF;
+
+      --nav-h: 72px;
+      --max-w: 1200px;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --display: 'Sora', sans-serif;
+      --mono: 'IBM Plex Mono', monospace;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--text-dark);
+      background: var(--bg-white);
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-light);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--blue);
+      border-radius: 2px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* ─── NAVBAR ─────────────────────────────────────────── */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--nav-h);
+      background: var(--nav-bg);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      padding: 0 clamp(16px, 5vw, 60px);
+      justify-content: space-between;
+      transition: border-color 0.3s;
+      box-shadow: 0 2px 24px rgba(2, 132, 199, 0.3);
+    }
+
+    .nav-logo {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .nav-logo-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .nav-logo-text span {
+      font-size: 10px;
+      font-family: var(--mono);
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+
+    .nav-links li button {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 7px;
+      transition: all 0.22s var(--ease);
+      cursor: pointer;
+      font-family: var(--mono);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .nav-links li button:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .nav-links li button.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-links li button.active::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-demo-nav {
+      background: var(--white);
+      color: var(--blue-dark);
+      border: none;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.22s;
+      font-family: var(--mono);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-demo-nav:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      background: var(--accent-light);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      background: none;
+      border: none;
+      flex-shrink: 0;
+    }
+
+    .hamburger span {
+      width: 22px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: 0.3s;
+      display: block;
+    }
+
+    .hamburger.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: var(--nav-h);
+      left: 0;
+      width: 100%;
+      background: var(--blue-dark);
+      backdrop-filter: blur(20px);
+      padding: 12px 20px 20px;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 999;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      animation: slideDown 0.25s var(--ease-out);
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .mobile-nav.open {
+      display: flex;
+    }
+
+    .mobile-nav button {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 13px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      font-family: var(--mono);
+      text-align: left;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.2s, background 0.2s;
+      border-radius: 6px;
+    }
+
+    .mobile-nav button:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-nav .mob-cta {
+      margin-top: 8px;
+      background: var(--white);
+      color: var(--blue-dark);
+      border: none;
+      padding: 13px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: var(--mono);
+    }
+
+    /* ─── PAGE SYSTEM ─────────────────────────────────────── */
+    .page {
+      display: none;
+      min-height: 100vh;
+      padding-top: var(--nav-h);
+    }
+
+    .page.active {
+      display: block;
+      animation: pgIn 0.35s var(--ease);
+    }
+
+    @keyframes pgIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ─── SECTION COMMONS ─────────────────────────────────── */
+    .label-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--blue-dim);
+      margin-bottom: 14px;
+    }
+
+    .label-tag::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: var(--blue);
+    }
+
+    .label-tag-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 14px;
+    }
+
+    .label-tag-white::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .section-h2 {
+      font-family: var(--display);
+      font-size: clamp(28px, 3.5vw, 52px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.8px;
+      margin-bottom: 10px;
+    }
+
+    .section-h2.blue-txt {
+      color: var(--blue-dark);
+    }
+
+    .section-h2.dark {
+      color: var(--text-dark);
+    }
+
+    .section-h2.white {
+      color: var(--white);
+    }
+
+    .section-divider {
+      width: 56px;
+      height: 3px;
+      margin: 16px 0 28px;
+      border-radius: 2px;
+    }
+
+    .divider-blue {
+      background: linear-gradient(90deg, var(--blue), transparent);
+    }
+
+    .divider-white {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), transparent);
+    }
+
+    .divider-center {
+      margin: 16px auto 28px;
+    }
+
+    .para-dark {
+      color: var(--text-mid);
+      line-height: 1.85;
+      font-size: 17px;
+    }
+
+    .para-light {
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.85;
+      font-size: 17px;
+    }
+
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 60px);
+    }
+
+    /* ─── BUTTONS ─────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: var(--white);
+      padding: 13px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      transition: all 0.25s;
+      font-family: var(--mono);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(2, 132, 199, 0.5);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid var(--blue);
+      color: var(--blue-dark);
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      transition: all 0.25s;
+      font-family: var(--mono);
+      background: none;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(2, 132, 199, 0.08);
+      border-color: var(--blue-dim);
+    }
+
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      color: var(--blue-dark);
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      transition: all 0.25s;
+      font-family: var(--mono);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-white:hover {
+      transform: translateY(-2px);
+      background: var(--accent-light);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ─── STATUS BADGES ─────────────────────────────── */
+    .risk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: var(--mono);
+      letter-spacing: 0.5px;
+    }
+
+    .risk-blue {
+      background: rgba(2, 132, 199, 0.1);
+      color: var(--blue-dim);
+      border: 1px solid rgba(2, 132, 199, 0.28);
+    }
+
+    .risk-light {
+      background: rgba(186, 230, 253, 0.5);
+      color: var(--blue-dark);
+      border: 1px solid rgba(2, 132, 199, 0.25);
+    }
+
+    .risk-green {
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .risk-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(140deg, #f0f9ff 0%, #e0f2fe 40%, #bae6fd 100%);
+      padding: clamp(60px, 10vw, 100px) 0 clamp(50px, 8vw, 80px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(2, 132, 199, 0.12) 0%, transparent 70%);
+    }
+
+    .hero-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 60px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(2, 132, 199, 0.12);
+      border: 1px solid rgba(2, 132, 199, 0.3);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--blue-dim);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(34px, 5vw, 64px);
+      font-weight: 800;
+      line-height: 1.06;
+      letter-spacing: -1.5px;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    h1 .blue {
+      color: var(--blue);
+    }
+
+    h1 .dark-blue {
+      color: var(--blue-dark);
+    }
+
+    .hero-rule {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--blue-light));
+      border-radius: 2px;
+      margin: 20px 0;
+    }
+
+    .hero-body {
+      font-size: 17px;
+      color: var(--text-mid);
+      line-height: 1.8;
+      margin-bottom: 28px;
+      max-width: 540px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-mini-stats {
+      display: flex;
+      gap: 14px;
+      margin-top: 34px;
+      flex-wrap: wrap;
+    }
+
+    .hero-mini-card {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(2, 132, 199, 0.2);
+      border-radius: 12px;
+      padding: 14px 18px;
+      min-width: 140px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-mini-card strong {
+      display: block;
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--blue-dark);
+    }
+
+    .hero-mini-card span {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+    }
+
+    /* DASHBOARD CARD */
+    .score-card {
+      background: #fff;
+      border-radius: 18px;
+      border: 1px solid rgba(2, 132, 199, 0.18);
+      padding: 24px;
+      box-shadow: 0 8px 40px rgba(2, 132, 199, 0.12);
+    }
+
+    .score-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .score-card-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .dashboard-title {
+      font-family: var(--display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .live-dot-wrap {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: 1.5px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 1.5s infinite;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(2, 132, 199, 0.08);
+    }
+
+    .score-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .score-icon.blue-bg {
+      background: rgba(2, 132, 199, 0.12);
+      color: var(--blue-dim);
+    }
+
+    .score-icon.light-bg {
+      background: rgba(186, 230, 253, 0.4);
+      color: var(--blue-dark);
+    }
+
+    .score-icon.green-bg {
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
+    }
+
+    .score-lbl {
+      flex: 1;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .score-val {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .score-big {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 18px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.08), rgba(186, 230, 253, 0.15));
+      border-radius: 12px;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+    }
+
+    .score-big-num {
+      font-family: var(--display);
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--blue);
+      line-height: 1;
+    }
+
+    .score-big-info .label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .score-big-info .sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      font-family: var(--mono);
+    }
+
+    /* ─── STATS STRIP ─────────────────────────────────────── */
+    .section-blue {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-deeper) 100%);
+      padding: clamp(60px, 8vw, 96px) 0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: clamp(20px, 3vw, 30px);
+      text-align: center;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .stat-num {
+      font-family: var(--display);
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .stat-lbl {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.6;
+    }
+
+    /* ─── PLATFORM SECTION ─────────────────────────────────── */
+    .platform-section {
+      background: var(--bg-white);
+      padding: clamp(60px, 8vw, 96px) 0;
+    }
+
+    .platform-sub {
+      max-width: 760px;
+      margin-bottom: 44px;
+      color: var(--text-mid);
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .platform-card {
+      background: #fff;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+      box-shadow: 0 2px 12px rgba(2, 132, 199, 0.06);
+    }
+
+    .platform-card:hover {
+      border-color: rgba(2, 132, 199, 0.35);
+      box-shadow: 0 12px 40px rgba(2, 132, 199, 0.12);
+      transform: translateY(-3px);
+    }
+
+    .platform-img-wrap {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--bg-light), var(--bg-section));
+    }
+
+    .platform-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .platform-card .inner {
+      padding: 22px;
+    }
+
+    .element-badge {
+      display: inline-block;
+      background: rgba(2, 132, 199, 0.1);
+      color: var(--blue-dim);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      border: 1px solid rgba(2, 132, 199, 0.18);
+    }
+
+    .platform-card h3 {
+      font-family: var(--display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .platform-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .more-text {
+      display: none;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(2, 132, 199, 0.1);
+    }
+
+    .platform-card.open .more-text {
+      display: block;
+    }
+
+    .expand-btn {
+      margin-top: 16px;
+      background: none;
+      border: 1px solid rgba(2, 132, 199, 0.28);
+      color: var(--blue-dim);
+      padding: 7px 18px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--mono);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .expand-btn:hover {
+      background: rgba(2, 132, 199, 0.08);
+      border-color: var(--blue);
+    }
+
+    /* ─── WHY SECTION ─────────────────────────────────────── */
+    .why-section {
+      background: var(--bg-light);
+      padding: clamp(60px, 8vw, 96px) 0;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 44px;
+    }
+
+    .why-card {
+      background: #fff;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+      border-radius: 16px;
+      padding: clamp(20px, 3vw, 30px);
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .why-card:hover {
+      border-color: rgba(2, 132, 199, 0.35);
+      box-shadow: 0 8px 28px rgba(2, 132, 199, 0.1);
+    }
+
+    .why-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(186, 230, 253, 0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 20px;
+      color: var(--blue);
+      border: 1px solid rgba(2, 132, 199, 0.18);
+    }
+
+    .why-card h4 {
+      font-family: var(--display);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+    }
+
+    .why-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    /* ─── SECTION LIGHT / ALT ─────────────────────────────── */
+    .section-light {
+      background: var(--bg-white);
+      padding: clamp(60px, 8vw, 96px) 0;
+    }
+
+    .section-alt {
+      background: var(--bg-light);
+      padding: clamp(60px, 8vw, 96px) 0;
+    }
+
+    /* ─── MARKET CHARTS ─────────────────────────────────────── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 44px;
+    }
+
+    .chart-card {
+      background: #fff;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.06);
+    }
+
+    .chart-card h4 {
+      font-family: var(--display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .chart-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      font-family: var(--mono);
+    }
+
+    .chart-wrap {
+      height: 260px;
+      position: relative;
+    }
+
+    /* ─── ABOUT PAGE ─────────────────────────────────────────── */
+    .about-hero {
+      background: linear-gradient(140deg, #e0f2fe 0%, #bae6fd 60%, #7dd3fc 100%);
+      padding: clamp(80px, 12vw, 120px) 0 clamp(60px, 8vw, 80px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -60px;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(2, 132, 199, 0.15) 0%, transparent 70%);
+    }
+
+    .about-hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .founders-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 44px;
+    }
+
+    .founder-card {
+      background: #fff;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+      border-radius: 18px;
+      padding: clamp(20px, 3vw, 36px);
+      box-shadow: 0 4px 20px rgba(2, 132, 199, 0.08);
+    }
+
+    .founder-img {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--display);
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
+    .founder-card h3 {
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .founder-card .role {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue-dim);
+      margin-bottom: 14px;
+    }
+
+    .founder-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .founder-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .f-badge {
+      background: rgba(2, 132, 199, 0.08);
+      border: 1px solid rgba(2, 132, 199, 0.18);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--blue-dim);
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── FAQ ─────────────────────────────────────────────── */
+    .faq-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .faq-item {
+      background: #fff;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .faq-q {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      cursor: pointer;
+      gap: 16px;
+    }
+
+    .faq-q h4 {
+      font-family: var(--display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .faq-icon {
+      font-size: 20px;
+      font-weight: 300;
+      color: var(--blue);
+      flex-shrink: 0;
+      transition: transform 0.3s;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-body {
+      display: none;
+      padding: 0 22px 18px;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      border-top: 1px solid rgba(2, 132, 199, 0.08);
+    }
+
+    .faq-item.open .faq-body {
+      display: block;
+    }
+
+    /* ─── PRICING ─────────────────────────────────────────── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 44px;
+    }
+
+    .price-card {
+      background: #fff;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+      border-radius: 18px;
+      padding: clamp(22px, 3vw, 36px);
+      position: relative;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.06);
+    }
+
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(2, 132, 199, 0.14);
+    }
+
+    .price-card.featured {
+      border: 2px solid var(--blue);
+      box-shadow: 0 8px 40px rgba(2, 132, 199, 0.18);
+      transform: scale(1.03);
+    }
+
+    .price-card.featured:hover {
+      transform: scale(1.03) translateY(-4px);
+    }
+
+    .featured-label {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: #fff;
+      padding: 4px 18px;
+      border-radius: 20px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .price-tier {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue-dim);
+      margin-bottom: 8px;
+    }
+
+    .price-title {
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .price-amount {
+      font-family: var(--display);
+      font-size: clamp(34px, 4vw, 48px);
+      font-weight: 800;
+      color: var(--blue-dark);
+      line-height: 1;
+    }
+
+    .price-amount span {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .price-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 12px 0 20px;
+      line-height: 1.6;
+    }
+
+    .price-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .price-features li {
+      font-size: 13px;
+      color: var(--text-mid);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .price-features li::before {
+      content: '✓';
+      color: var(--blue);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ─── PROCESS ─────────────────────────────────────────── */
+    .process-step {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(30px, 5vw, 72px);
+      align-items: center;
+      margin-bottom: clamp(56px, 8vw, 96px);
+    }
+
+    .process-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-num {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--blue-dim);
+      margin-bottom: 12px;
+    }
+
+    .step-h3 {
+      font-family: var(--display);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .step-p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 18px;
+    }
+
+    .step-img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      border-radius: 16px;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+    }
+
+    .step-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* image placeholder fallback */
+    .step-img-placeholder {
+      width: 100%;
+      aspect-ratio: 16/10;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--bg-section), var(--bg-light));
+      border: 1px solid rgba(2, 132, 199, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 8px 32px rgba(2, 132, 199, 0.1);
+    }
+
+    .step-img-placeholder i {
+      font-size: 40px;
+      color: var(--blue);
+      opacity: 0.5;
+    }
+
+    .step-img-placeholder span {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ─── CONTACT ─────────────────────────────────────────── */
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 40px;
+      margin-top: 44px;
+    }
+
+    .contact-form {
+      background: #fff;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+      border-radius: 20px;
+      padding: clamp(24px, 4vw, 40px);
+      box-shadow: 0 4px 24px rgba(2, 132, 199, 0.08);
+    }
+
+    .contact-form h3 {
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .contact-form p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-mid);
+      margin-bottom: 6px;
+      font-family: var(--mono);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid rgba(2, 132, 199, 0.18);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: var(--font);
+      color: var(--text-dark);
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .contact-info h3 {
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .contact-info p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .contact-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(2, 132, 199, 0.1);
+    }
+
+    .contact-detail .icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(2, 132, 199, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue);
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+
+    .contact-detail .text strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .contact-detail .text span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      background: var(--footer-bg);
+      padding: clamp(48px, 6vw, 80px) 0 0;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand {
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .footer-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer-badge {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.8);
+      letter-spacing: 0.5px;
+    }
+
+    .footer-col-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 16px;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col a {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: #fff;
+    }
+
+    .footer-bottom-bar {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-bottom-bar p {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.45);
+      font-family: var(--mono);
+    }
+
+    .footer-bottom-bar p span {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      font-family: var(--mono);
+      transition: color 0.2s;
+    }
+
+    .footer-bottom-links a:hover {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* ─── COMPARISON TABLE ───────────────────────── */
+    .comp-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 40px;
+      border-radius: 16px;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.06);
+    }
+
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    .comp-table th {
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue-deeper));
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 16px 18px;
+      text-align: left;
+    }
+
+    .comp-table th:first-child {
+      border-radius: 16px 0 0 0;
+    }
+
+    .comp-table th:last-child {
+      border-radius: 0 16px 0 0;
+    }
+
+    .comp-table td {
+      padding: 14px 18px;
+      font-size: 13px;
+      color: var(--text-mid);
+      border-bottom: 1px solid rgba(2, 132, 199, 0.08);
+    }
+
+    .comp-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comp-table tr:hover td {
+      background: rgba(2, 132, 199, 0.03);
+    }
+
+    .comp-table td:first-child {
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .comp-table .yes {
+      color: #059669;
+      font-weight: 700;
+    }
+
+    .comp-table .no {
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .comp-table .highlight-col {
+      background: rgba(2, 132, 199, 0.06);
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────── */
+    @media(max-width:900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .btn-demo-nav {
+        display: none;
+      }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-inner>div:last-child {
+        display: none;
+      }
+
+      .hero .hero-mini-stats {
+        display: none;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .platform-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .why-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .price-card.featured {
+        transform: scale(1);
+      }
+
+      .process-step {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .step-img {
+        aspect-ratio: 16/9;
+      }
+
+      .contact-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .founders-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-bottom-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .footer-bottom-links {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .section-light [style*="grid-template-columns:1fr 1fr"],
+      .section-alt [style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+
+      [style*="grid-template-columns:repeat(3,1fr)"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    @media(max-width:600px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .why-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-mini-stats {
+        flex-direction: column;
+      }
+
+      .hero-mini-card {
+        min-width: unset;
+        width: 100%;
+      }
+
+      .btn-primary,
+      .btn-secondary,
+      .btn-white {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .footer-bottom-links {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════ -->
+  <nav class="navbar">
+    <a class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+      </div>
+      <div class="nav-logo-text">
+        RevenuePilot
+        <span>AI Revenue Governance</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><button id="nav-home" class="active" onclick="showPage('home')">Home</button></li>
+      <li><button id="nav-about" onclick="showPage('about')">About</button></li>
+      <li><button id="nav-platform" onclick="showPage('platform')">Platform</button></li>
+      <li><button id="nav-market" onclick="showPage('market')">Market</button></li>
+      <li><button id="nav-process" onclick="showPage('process')">Process</button></li>
+      <li><button id="nav-faq" onclick="showPage('faq')">FAQ</button></li>
+      <li><button id="nav-pricing" onclick="showPage('pricing')">Pricing</button></li>
+      <li><button id="nav-contact" onclick="showPage('contact')">Contact</button></li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-demo-nav" onclick="showPage('contact')">Request Demo</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <button onclick="showPage('home');closeMobile()">Home</button>
+    <button onclick="showPage('about');closeMobile()">About</button>
+    <button onclick="showPage('platform');closeMobile()">Platform</button>
+    <button onclick="showPage('market');closeMobile()">Market</button>
+    <button onclick="showPage('process');closeMobile()">Process</button>
+    <button onclick="showPage('faq');closeMobile()">FAQ</button>
+    <button onclick="showPage('pricing');closeMobile()">Pricing</button>
+    <button onclick="showPage('contact');closeMobile()">Contact</button>
+    <button class="mob-cta" onclick="showPage('contact');closeMobile()">Request Demo →</button>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+     PAGE : HOME
+═══════════════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            UK's First Live Revenue Governance Copilot
+          </div>
+          <h1>
+            Enforce. <span class="blue">Govern.</span>
+            <span class="dark-blue">Scale.</span>
+          </h1>
+          <div class="hero-rule"></div>
+          <p class="hero-body">
+            RevenuePilot is an AI-native Sales Governance & Dynamic Policy-to-Conversation Infrastructure Platform 
+            built to eliminate the "Commercial Governance Gap" facing UK high-ticket B2B and consultative sales firms.
+            From real-time negotiation inference to automated pricing guardrails, we transform fragile sales processes
+            into permanent Institutional Revenue Equity.
+          </p>
+          <div class="hero-btns">
+            <button class="btn-primary" onclick="showPage('contact')">Book a Platform Demo</button>
+            <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+          </div>
+          
+        </div>
+        <!-- DASHBOARD -->
+        <div>
+          <div class="score-card">
+            <div class="score-card-top">
+              <div>
+                <div class="score-card-label">RevenuePilot · Live Governance Engine</div>
+                <h3 class="dashboard-title">Revenue Intelligence Dashboard</h3>
+              </div>
+              <div class="live-dot-wrap"><span class="live-dot"></span>LIVE</div>
+            </div>
+            <div class="score-row">
+              <div class="score-icon blue-bg">TR</div>
+              <span class="score-lbl">Total Revenue (YTD)</span>
+              <span class="score-val">£128.47M ↑18.6%</span>
+            </div>
+            <div class="score-row">
+              <div class="score-icon green-bg">RH</div>
+              <span class="score-lbl">Revenue Health Score</span>
+              <span class="score-val">93/100 Excellent</span>
+            </div>
+            <div class="score-row">
+              <div class="score-icon light-bg">AD</div>
+              <span class="score-lbl">Anomalies Detected</span>
+              <span class="score-val">7 Critical · 3 Warn · 12 Info</span>
+            </div>
+            <div class="score-row">
+              <div class="score-icon blue-bg">CS</div>
+              <span class="score-lbl">Compliance Status</span>
+              <span class="score-val">98% Compliant ✓</span>
+            </div>
+            <div class="score-big">
+              <div class="score-big-num">15<span style="font-size:24px;">%+</span></div>
+              <div class="score-big-info">
+                <div class="label">Revenue Growth Impact</div>
+                <div class="sub">Top-line Uplift · AI Governed · FCA Compliant</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <section class="section-blue">
+      <div class="container">
+        <div class="label-tag-white">The UK Commercial Governance Crisis</div>
+        <h2 class="section-h2 white">UK High-Ticket Firms Are Losing Millions<br>to Silent Discounting & Governance
+          Gaps.</h2>
+        <div class="section-divider divider-white"></div>
+        <p class="para-light" style="max-width:760px;">
+          UK B2B sales cycles have stretched to an average of 6.5 months, with win rates on complex deals dropping to
+          just 21%. Companies lose 15–20% of potential gross margin through negotiation leakage  where reps offer
+          unauthorized concessions under quota pressure. The 2025/26 FCA Consumer Duty now requires evidenced "good
+          outcomes" for every client interaction. RevenuePilot is the live governance infrastructure that protects your
+          margins, ensures compliance, and clones your founder's closing logic across every deal.
+        </p>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-num">£1.2B</div>
+            <div class="stat-lbl">Annual "clawed-back" revenue lost to UK service firms via mis-selling, unauthorized
+              discounting & post-sale refunds</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">88%</div>
+            <div class="stat-lbl">Of revenue directors rely on passive post-call tools  with zero live governance
+              capability to stop margin erosion in real time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">96%</div>
+            <div class="stat-lbl">Of founder-led agencies lack a machine-executable system for replicating their
+              "Closing DNA" across growing sales teams</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">£10K+</div>
+            <div class="stat-lbl">Lost margin opportunity per rep annually from qualification drift, unapproved
+              concessions & unmanaged pricing erosion</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLATFORM PREVIEW -->
+    <section class="platform-section">
+      <div class="container">
+        <div class="label-tag">Core Intelligence Modules</div>
+        <h2 class="section-h2 dark">Five Modules. One Complete Revenue Governance OS.</h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-dark platform-sub">
+          RevenuePilot combines Live Negotiation Inference, Qualification-Gated Pricing, Compliance Automation, Anomaly
+          Detection, and Financial Optimisation into one unified AI-native SaaS platform  purpose-built for UK
+          high-ticket consultative sales.
+        </p>
+        <div class="platform-grid">
+          <!-- CARD 1 -->
+          <div class="platform-card">
+            <div class="platform-img-wrap" style="display:flex;align-items:center;justify-content:center;">
+                <img src="reve1.jpg" alt="Negotiation Engine" class="platform-module-img">
+            </div>
+            <div class="inner">
+              <div class="element-badge">Module 01</div>
+              <h3>Live Negotiation Inference Engine</h3>
+              <p>Real-time AI that reads live sales conversations, detects negotiation leakage, policy drift, and
+                qualification gaps  before they become costly mistakes.</p>
+              <div class="more-text">
+                The Behavior-to-Outcome Governance Graph ingests live conversational data from Zoom/Teams, parsing
+                negotiation nuances and mapping them into a structured commercial framework. The system identifies "Deal
+                DNA"  including unaddressed objections, micro-shifts in buyer sentiment, and discount-induced urgency 
+                enabling Policy-to-Prompt interventions in the moment.
+              </div>
+              <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+            </div>
+          </div>
+          <!-- CARD 2 -->
+          <div class="platform-card">
+            <div class="platform-img-wrap" style="display:flex;align-items:center;justify-content:center;">
+                <img src="reve2.jpg" alt="Negotiation Engine" class="platform-module-img">
+            </div>
+            <div class="inner">
+              <div class="element-badge">Module 02</div>
+              <h3>Qualification-Gated Pricing Engine</h3>
+              <p>Automated enforcement that prevents unauthorized concessions and price drops  until specific
+                qualification gates are met by the sales representative.</p>
+              <div class="more-text">
+                The QPE auto-flags requests for unapproved discounts on high-complexity deals, suppressing them until
+                the rep validates budget, authority, and suitability. Coupled with Negotiation Delta Diagnostics, the
+                platform provides evidence-based remediation prompts in real time  protecting gross margins across
+                every deal in the pipeline.
+              </div>
+              <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+            </div>
+          </div>
+          <!-- CARD 3 -->
+          <div class="platform-card">
+            <div class="platform-img-wrap" style="display:flex;align-items:center;justify-content:center;">
+              <img src="reve3.jpg" alt="Negotiation Engine" class="platform-module-img">
+            </div>
+            <div class="inner">
+              <div class="element-badge">Module 03</div>
+              <h3>FCA Compliance Automation</h3>
+              <p>Automated Refusal Summary and Intent Clarification logs ensure every interaction is audit-ready under
+                2025/26 FCA Consumer Duty mandates.</p>
+              <div class="more-text">
+                The Compliance module documents when and why a prospect declines an offer  providing a verifiable,
+                traceable audit trail of "no-pressure" sales logic. Every policy-to-prompt generated is fully
+                "explainable," enabling managers to trace exactly why a governance intervention was triggered.
+                Eliminates 75% of retroactive manual compliance review overhead.
+              </div>
+              <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY SECTION -->
+    <section class="why-section">
+      <div class="container">
+        <div class="label-tag">Why RevenuePilot</div>
+        <h2 class="section-h2 dark">Built for the Governance Era.<br>Not Just a CRM with an AI Badge.</h2>
+        <div class="section-divider divider-blue"></div>
+        <div class="why-grid">
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-robot"></i></div>
+            <h4>Live Behavior-to-Outcome Governance</h4>
+            <p>Goes beyond passive call recording to a live decision layer that connects conversational signals, pricing
+              policy, and qualification logic  acting in real time rather than reporting after the damage is done.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-dna"></i></div>
+            <h4>Founder's "Closing DNA" Preservation</h4>
+            <p>Captures proprietary closing logic lost to the sector's high staff turnover. When your best closer
+              leaves, their negotiation intelligence stays permanently encoded in the platform as Institutional Revenue
+              Equity.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-pound-sign"></i></div>
+            <h4>Margin Protection Engine</h4>
+            <p>The Revenue-Quality Scoring Model evaluates deals based on long-term profitability rather than simple
+              "Closed-Won" status  proactively preventing churn and margin erosion before contracts are signed.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-plug"></i></div>
+            <h4>Stack-Agnostic Integration</h4>
+            <p>Built to sit above any communication stack (Zoom, Teams, Google Meet) and CRM (HubSpot, Salesforce,
+              Pipedrive)  operators are never locked into a single ecosystem as they scale.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-balance-scale"></i></div>
+            <h4>FCA Consumer Duty Aligned</h4>
+            <p>Generates leadership-ready audit reports evidencing "good outcomes" and suitability  fully compliant
+              with 2025/26 FCA Consumer Duty mandates and UK GDPR, eliminating regulatory exposure.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-chart-line"></i></div>
+            <h4>SME-Optimised SaaS Pricing</h4>
+            <p>Tiered SaaS from £59/user/month  giving independent UK high-ticket advisory firms enterprise-level
+              revenue governance intelligence without the cost of massive RevOps teams or enterprise CRM suites.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- end page home -->
+
+
+  <!-- ═══════════════════════════════════════════
+     PAGE : ABOUT
+═══════════════════════════════════════════════ -->
+  <div class="page" id="page-about">
+    <section class="about-hero">
+      <div class="container">
+        <div class="label-tag">About Us</div>
+        <h2 class="section-h2 dark">Built by a Revenue Engineer Who Lived the Problem.<br><span
+            style="color:var(--blue-dark);">Designed for the Governance Era.</span></h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-dark" style="max-width:680px;margin-bottom:40px;">RevenuePilot is a UK-based AI SaaS venture
+          founded by Waseem Arshad  combining deep software engineering expertise with hands-on high-ticket sales
+          "field truth" from closing £400,000+ in live event deals, to solve the most pressing challenge facing UK
+          consultative sales firms today: the "Commercial Governance Gap" that costs the sector over £1.2 billion
+          annually in clawed-back revenue.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Get in Touch</button>
+          <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision & Mission -->
+    <section class="section-light">
+      <div class="container">
+        <div class="label-tag">Vision & Mission</div>
+        <h2 class="section-h2 dark">To Be the Global Infrastructure Standard<br>for High-Agency Revenue Execution.</h2>
+        <div class="section-divider divider-blue"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:32px;">
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-eye"></i></div>
+            <h4>Our Vision</h4>
+            <p>We aspire to be the global infrastructure standard for high-agency revenue execution  fostering a future
+              in which every sales conversation is automatically synchronised with founder-level policy logic to ensure
+              zero-leakage deals and autonomous commercial readiness.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-bullseye"></i></div>
+            <h4>Our Mission</h4>
+            <p>To enable UK high-ticket sales organisations to move from "passive recording and summary" to "dynamic
+              commercial governance" by leveraging a live behavior-to-outcome graph engine that eliminates the
+              governance gap and protects institutional revenue equity during real-time negotiations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="section-alt">
+      <div class="container">
+        <div class="label-tag">Core Values</div>
+        <h2 class="section-h2 dark">What Drives Everything We Build</h2>
+        <div class="section-divider divider-blue"></div>
+        <div class="why-grid">
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-lightbulb"></i></div>
+            <h4>Innovation</h4>
+            <p>Continuous refinement of live behavior-to-outcome inference models to stay ahead of the complexity of
+              high-ticket negotiations and the evolving buyer-committee dynamics of 2026.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-crosshairs"></i></div>
+            <h4>Accuracy</h4>
+            <p>A commitment to commercial-digital integrity and the elimination of "policy loss" during the transition
+              from strategic intent to live sales execution.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-lock"></i></div>
+            <h4>Sovereignty</h4>
+            <p>Empowering founders and revenue leaders to own their commercial logic as a proprietary and permanent
+              business asset, independent of individual representative turnover.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-tachometer-alt"></i></div>
+            <h4>Efficiency</h4>
+            <p>Making complex negotiation journeys manageable through dynamic pricing verification and low-friction
+              integrations with existing CRM and communication stacks.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-hands-helping"></i></div>
+            <h4>Stewardship</h4>
+            <p>Equipping managers and directors with automated oversight needed to scale revenue footprints without
+              margin-proportional operational risks or "silent discounting" erosion.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-globe"></i></div>
+            <h4>Commercial Equity</h4>
+            <p>Democratising enterprise-grade governance intelligence for independent UK advisory firms and founder-led
+              agencies that currently lack the resources of global CRM giants.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Founder Section -->
+    <section class="section-light">
+      <div class="container">
+        <div class="label-tag">Founder</div>
+        <h2 class="section-h2 dark">The Revenue Engineer Behind RevenuePilot</h2>
+        <div class="section-divider divider-blue"></div>
+        <div class="founders-grid">
+          <div class="founder-card">
+            <div class="founder-img">WA</div>
+            <h3>Waseem Arshad</h3>
+            <div class="role">Founder & CEO · Revenue Strategy & Growth Systems Lead</div>
+            <p>Waseem possesses a unique "founder–problem–market fit"  bridging technical software engineering
+              discipline and high-stakes sales "field truth." With a B.Tech in Computer Science and an MA in
+              International Business Management from Middlesex University London, he has a proven track record of
+              driving £30,000+ growth in under 6 months and personally closing £10k–£20k high-ticket deals. As Business
+              Development Head at Zaikox and IT Consultant at BAH Properties (£400,000+ in total sales), he has
+              experienced the Live Intelligence Gap from the front line.</p>
+            <div class="founder-badges">
+              <span class="f-badge">Software Engineering</span>
+              <span class="f-badge">High-Ticket Sales Closing</span>
+              <span class="f-badge">CRM Architecture</span>
+              <span class="f-badge">MA International Business</span>
+              <span class="f-badge">Revenue Operations</span>
+            </div>
+          </div>
+          <div class="founder-card">
+            <div class="founder-img" style="background:linear-gradient(135deg,var(--blue-light),var(--accent));"><i
+                class="fas fa-trophy" style="font-size:28px;"></i></div>
+            <h3>Track Record</h3>
+            <div class="role">Proven Commercial Results</div>
+            <p style="margin-bottom:16px;">Waseem's "one-man revenue engine" experience and systems-builder background
+              forms the foundational backbone of RevenuePilot's design. His deep understanding of how to link technical
+              telemetry to human commercial outcomes is what makes this platform genuinely different from generic AI
+              recorders.</p>
+            <div class="founder-badges">
+              <span class="f-badge">£400K+ Closed in Live Events</span>
+              <span class="f-badge">60% Conversion Rate Increase</span>
+              <span class="f-badge">£30K+ Growth in 6 Months</span>
+              <span class="f-badge">Full CRM Build from Scratch</span>
+              <span class="f-badge">30% Lead Conversion Boost</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- end page about -->
+
+
+  <!-- ═══════════════════════════════════════════
+     PAGE : PLATFORM
+═══════════════════════════════════════════════ -->
+  <div class="page" id="page-platform">
+    <section
+      style="background:linear-gradient(140deg,#f0f9ff 0%,#e0f2fe 50%,#bae6fd 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+      <div class="container">
+        <div class="label-tag">Platform</div>
+        <h2 class="section-h2 dark">The Complete Revenue Governance Infrastructure.<br><span
+            style="color:var(--blue-dark);">Active. Intelligent. Compliant.</span></h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-dark" style="max-width:680px;margin-bottom:40px;">RevenuePilot is not a CRM or a call recorder.
+          It is a live governance layer between your sales conversations and your commercial policy  engineered to
+          protect margins, enforce pricing discipline, and preserve your founder's "Closing DNA" at scale.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Request Demo →</button>
+          <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-light">
+      <div class="container">
+        <div class="label-tag">Core Innovation Modules</div>
+        <h2 class="section-h2 dark">Five Proprietary Engines. One Governance OS.</h2>
+        <div class="section-divider divider-blue"></div>
+        <div class="platform-grid">
+          <div class="platform-card">
+            <div class="platform-img-wrap" style="display:flex;align-items:center;justify-content:center;">
+                <img src="reve4.jpg" alt="Negotiation Engine" class="platform-module-img">
+            </div>
+            <div class="inner">
+              <div class="element-badge">Engine 01</div>
+              <h3>Behavior-to-Outcome Governance Graph</h3>
+              <p>A first-of-its-kind framework that bridges the gap between live conversational signals and backend
+                commercial policy.</p>
+              <div class="more-text">Captures hidden negotiation patterns and SIMOPs conflicts, storing them as
+                structured benchmarked commercial objects. The graph detects "Deal DNA"  including the impact of
+                unaddressed objections, micro-shifts in buyer sentiment, and discount-induced urgency  enabling
+                personalized "Policy-to-Prompt" pathways instantly.</div>
+              <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+            </div>
+          </div>
+          <div class="platform-card">
+            <div class="platform-img-wrap" style="display:flex;align-items:center;justify-content:center;">
+                <img src="reve5.jpg" alt="Revenue-Quality Ontology" class="platform-module-img">
+            </div>
+            <div class="inner">
+              <div class="element-badge">Engine 02</div>
+              <h3>Revenue-Quality Ontology (RQO)</h3>
+              <p>A proprietary schema using ML to identify and link detected conversational entities to precise
+                deal-health coordinates.</p>
+              <div class="more-text">The RQO converts raw call data into structured "Behavioral Objects," ensuring that
+                the strategic nuances of specific sales methodologies (MEDDIC, Challenger, Founder-led) are preserved.
+                Enables rapid benchmarking and cloning of optimal closing logic across the team  turning transient
+                "street knowledge" into permanent Governance Equity.</div>
+              <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+            </div>
+          </div>
+          <div class="platform-card">
+            <div class="platform-img-wrap" style="display:flex;align-items:center;justify-content:center;">
+              <img src="reve6.jpg" alt="Negotiation Delta Diagnostics" class="platform-module-img">
+            </div>
+            <div class="inner">
+              <div class="element-badge">Engine 03</div>
+              <h3>Negotiation Delta Diagnostics (NDD)</h3>
+              <p>Automatically diagnoses root causes of margin erosion by analyzing the delta between expected policy
+                and live rep behavior.</p>
+              <div class="more-text">The NDD mechanism identifies early-stage discounting, missed suitability questions,
+                and unauthorized concessions in real time. When a deal risk profile shifts, the platform deconstructs
+                the change into a structured "Commercial Interference Report" without requiring manual manager review 
+                significantly reducing deal-review time.</div>
+              <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+            </div>
+          </div>
+          <div class="platform-card">
+            <div class="platform-img-wrap" style="display:flex;align-items:center;justify-content:center;">
+              <img src="reve7.jpg" alt="Policy-Inference Autocalibration" class="platform-module-img">
+            </div>
+            <div class="inner">
+              <div class="element-badge">Engine 04</div>
+              <h3>Policy-Inference Autocalibration (PIAC)</h3>
+              <p>An AI-driven process that continuously self-calibrates governance thresholds from diverse data sources.
+              </p>
+              <div class="more-text">PIAC triangulates data from Zoom/Teams audio, CRM history, and internal pricing
+                rules  eliminating the need for manual script re-writing. The system learns from historical deal
+                interaction trends and outcome data (defaults, refunds) to improve Policy-to-Prompt pathways
+                automatically over time.</div>
+              <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+            </div>
+          </div>
+          <div class="platform-card">
+            <div class="platform-img-wrap" style="display:flex;align-items:center;justify-content:center;">
+              <img src="reve8.jpg" alt="Commercial Stewardship Index" class="platform-module-img">
+            </div>
+            <div class="inner">
+              <div class="element-badge">Engine 05</div>
+              <h3>Commercial Stewardship Index (CSI)</h3>
+              <p>A composite measure assessing the reliability of automated sales workflows  reducing 20%+ margin
+                leakage at scale.</p>
+              <div class="more-text">The CSI converts daily sales interactions into proprietary institutional assets.
+                While competitors focus on "Closed-Won" speed, we identify that a heavy discount satisfying a short-term
+                revenue goal may result in a drop in long-term profitability via qualification-drift and unmanaged
+                post-sale costs. The CSI generates leadership-ready audit reports aligned with UK FCA Consumer Duty
+                2025/26.</div>
+              <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+            </div>
+          </div>
+          <div class="platform-card">
+            <div class="platform-img-wrap" style="display:flex;align-items:center;justify-content:center;">
+              <img src="reve9.jpg" alt="Community Revenue Intelligence Network" class="platform-module-img">
+            </div>
+            <div class="inner">
+              <div class="element-badge">Engine 06</div>
+              <h3>Community Revenue Intelligence Network</h3>
+              <p>Federated learning architecture enabling anonymised "Revenue-Quality DNA" to improve predictive models
+                sector-wide.</p>
+              <div class="more-text">Anonymised benchmarks from dozens of UK independent firms constantly improve
+                predictive models without sharing sensitive commercial data. Trends from high-efficiency advisory firms
+                in London can be used to optimise governance strategy for a new consultative business in Manchester 
+                providing independent firms with strategic intelligence usually reserved for global consulting giants.
+              </div>
+              <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Competitor Comparison -->
+    <section class="section-alt">
+      <div class="container">
+        <div class="label-tag">Competitive Advantage</div>
+        <h2 class="section-h2 dark">Why RevenuePilot Cannot Be Easily Replicated</h2>
+        <div class="section-divider divider-blue"></div>
+        <div class="comp-table-wrap">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th>Feature / Capability</th>
+                <th>Enterprise RI (Gong/Chorus)</th>
+                <th>Legacy CRM (Salesforce/HubSpot)</th>
+                <th>Sales Enablement (Outreach)</th>
+                <th>Manual Shadowing</th>
+                <th>RevenuePilot</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Live Negotiation Inference</td>
+                <td class="no">No (Post-call only)</td>
+                <td class="no">No (Static records)</td>
+                <td class="no">Limited (Script-based)</td>
+                <td class="no">No</td>
+                <td class="yes highlight-col">✓ Behavior Graph Logic</td>
+              </tr>
+              <tr>
+                <td>Qualification-Gated Pricing</td>
+                <td class="no">No</td>
+                <td class="no">Basic (Manual approvals)</td>
+                <td class="no">No</td>
+                <td class="no">Manual / High-friction</td>
+                <td class="yes highlight-col">✓ Automated Enforcement</td>
+              </tr>
+              <tr>
+                <td>UK FCA Consumer Duty</td>
+                <td class="no">No (US-centric)</td>
+                <td class="no">No</td>
+                <td class="no">No</td>
+                <td class="no">Variable / High-risk</td>
+                <td class="yes highlight-col">✓ Built-in Compliance</td>
+              </tr>
+              <tr>
+                <td>Negotiation Delta Diagnostics</td>
+                <td class="no">No</td>
+                <td class="no">No</td>
+                <td class="no">No</td>
+                <td class="no">No</td>
+                <td class="yes highlight-col">✓ Behaviour-to-Margin</td>
+              </tr>
+              <tr>
+                <td>Founder "Closing DNA" Cloning</td>
+                <td class="no">No</td>
+                <td class="no">No</td>
+                <td class="no">No</td>
+                <td class="no">Partial / Manual</td>
+                <td class="yes highlight-col">✓ Institutional Equity</td>
+              </tr>
+              <tr>
+                <td>Community Intelligence Network</td>
+                <td class="no">No</td>
+                <td class="no">No</td>
+                <td class="no">No</td>
+                <td class="no">No</td>
+                <td class="yes highlight-col">✓ Federated Benchmarking</td>
+              </tr>
+              <tr>
+                <td>Target Customer Segment</td>
+                <td class="no">Enterprise Sales Teams</td>
+                <td class="no">Broad B2B / Retail</td>
+                <td class="no">High-volume SDR Teams</td>
+                <td class="no">General</td>
+                <td class="yes highlight-col">✓ UK High-Ticket Firms</td>
+              </tr>
+              <tr>
+                <td>Cost Structure</td>
+                <td class="no">High Seat-based Fees</td>
+                <td class="no">Subscription + Add-ons</td>
+                <td class="no">Per-user Subscription</td>
+                <td class="no">High Labour Cost</td>
+                <td class="yes highlight-col">✓ SME-optimised SaaS</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div><!-- end page platform -->
+
+
+  <!-- ═══════════════════════════════════════════
+     PAGE : MARKET
+═══════════════════════════════════════════════ -->
+  <div class="page" id="page-market">
+    <section
+      style="background:linear-gradient(140deg,#f0f9ff 0%,#e0f2fe 50%,#bae6fd 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+      <div class="container">
+        <div class="label-tag">Market Analysis</div>
+        <h2 class="section-h2 dark">A $14.8B Global Market in Crisis.<br><span
+            style="color:var(--blue-dark);">RevenuePilot is the UK Solution.</span></h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-dark" style="max-width:680px;margin-bottom:40px;">The global AI-driven revenue intelligence
+          market was valued at USD $14.8 billion in 2024, projected to reach $18.6 billion by 2025 at 22.4% CAGR through
+          2032. The UK's B2B professional services market alone was valued at £240 billion in 2024. Yet 88% of
+          mid-market firms still rely on passive post-call tools with zero live governance capability.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Request Demo →</button>
+          <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-light">
+      <div class="container">
+        <div class="label-tag">Market Data & Intelligence</div>
+        <h2 class="section-h2 dark">The Numbers Behind the Opportunity</h2>
+        <div class="section-divider divider-blue"></div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h4>UK High-Ticket Advisory Market by Segment (SAM £M)</h4>
+            <p>Target addressable market across UK professional service hubs</p>
+            <div class="chart-wrap"><canvas id="chartSector"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h4>Key Governance Pain Points – UK Revenue Leaders</h4>
+            <p>Primary challenges driving adoption of RevenuePilot</p>
+            <div class="chart-wrap"><canvas id="chartRootCause"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h4>RevenuePilot vs Competitors – Capability Radar</h4>
+            <p>Platform capabilities vs existing market alternatives</p>
+            <div class="chart-wrap"><canvas id="chartRadar"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h4>Global AI Revenue Intelligence Market Growth 2022–2030</h4>
+            <p>Global market (USD B) + UK AI governance adoption (%)</p>
+            <div class="chart-wrap"><canvas id="chartGrowth"></canvas></div>
+          </div>
+        </div>
+        <div class="charts-grid" style="grid-template-columns:1fr;margin-top:32px;">
+          <div class="chart-card">
+            <h4>Platform Feature Comparison – RevenuePilot vs Market Average</h4>
+            <p>Capability scores across key governance intelligence dimensions (out of 100)</p>
+            <div class="chart-wrap"><canvas id="chartPerf"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Revenue Projections -->
+    <section class="section-blue">
+      <div class="container">
+        <div class="label-tag-white">Financial Projections</div>
+        <h2 class="section-h2 white">3-Year Revenue Trajectory</h2>
+        <div class="section-divider divider-white"></div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-num">£69K</div>
+            <div class="stat-lbl">Year 1 Revenue · 75 active firms · London & Manchester pilots · SaaS + Connector fees
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">£340K</div>
+            <div class="stat-lbl">Year 2 Revenue · 50–100 firms · Full UK launch · £55K net profit · CRM integrations
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">£687K</div>
+            <div class="stat-lbl">Year 3 Revenue · 200+ UK firms · £133K net profit · UAE/USA pilots · CRIN scaling
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">20+</div>
+            <div class="stat-lbl">High-value UK-based AI and revenue operations roles created by Year 5 at platform
+              maturity</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- end page market -->
+
+
+  <!-- ═══════════════════════════════════════════
+     PAGE: PROCESS
+═══════════════════════════════════════════════ -->
+  <div class="page" id="page-process">
+    <section
+      style="background:linear-gradient(140deg,#f0f9ff 0%,#e0f2fe 50%,#bae6fd 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+      <div class="container">
+        <div class="label-tag">How It Works</div>
+        <h2 class="section-h2 dark">From Reactive Forensics<br>to <span style="color:var(--blue-dark);">Live Revenue
+            Governance</span></h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-dark" style="max-width:680px;margin-bottom:40px;">RevenuePilot operates as a closed-loop
+          governance lifecycle  assessing, monitoring, diagnosing, intervening, benchmarking, and reporting  so every
+          sales decision is grounded in real-time commercial intelligence, not guesswork or post-call retrospection.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Request a Demo →</button>
+          <button class="btn-secondary" onclick="showPage('platform')">Explore Modules</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-light" style="padding-top:clamp(60px,8vw,96px);">
+      <div class="container">
+        <div class="label-tag">The 6-Phase Revenue Governance Lifecycle</div>
+        <h2 class="section-h2 dark">A Complete Governance Intelligence Loop  Not Just a Dashboard</h2>
+        <div class="section-divider divider-blue"></div>
+
+        <!-- Phase 1 -->
+        <div class="process-step">
+          <div>
+            <div class="step-num">Phase 01 · Assess</div>
+            <h3 class="step-h3">Establish Your "Closing DNA" Baseline</h3>
+            <p class="step-p">RevenuePilot ingests your commercial data  pricing rules, qualification frameworks,
+              objection-handling scripts, CRM history  to build a comprehensive Revenue-Quality Ontology (RQO). The
+              platform then runs your first set of governance diagnostics to establish baseline Margin Health and Policy
+              Compliance scores.</p>
+            <p class="step-p">The Assessment phase surfaces the hidden cost of unmanaged negotiation leakage  giving
+              you a precise, data-driven view of your "Commercial Governance Gap" before any strategy is deployed.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <span class="risk-badge risk-blue"><span class="risk-dot"></span>Automated RQO Setup</span>
+              <span class="risk-badge risk-light"><span class="risk-dot"></span>Baseline Governance Report</span>
+              <span class="risk-badge risk-green"><span class="risk-dot"></span>Zero Code Required</span>
+            </div>
+          </div>
+          <div class="step-img-placeholder">
+             <img src="reve10.jpg" alt="Negotiation Engine" class="platform-module-img">
+            <span>Phase 01 · Assess</span>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="process-step">
+          <div class="step-img-placeholder">
+             <img src="reve11.jpg" alt="Monitoring Engine" class="platform-module-img">
+            <span>Phase 02 · Monitor</span>
+          </div>
+          <div>
+            <div class="step-num">Phase 02 · Monitor</div>
+            <h3 class="step-h3">Real-Time Call & Deal Pipeline Monitoring</h3>
+            <p class="step-p">The Monitoring Engine ingests live signals from Zoom/Teams calls, CRM pipeline, and
+              pricing records  tracking negotiation velocity, qualification depth, policy compliance rates, and deal
+              sentiment on a continuous basis. Automated alerts flag at-risk situations the moment they emerge.</p>
+            <p class="step-p">Think of it as a 24/7 Revenue Director watching every sales conversation  objective,
+              continuous, and immediately actionable  without the cost of manual shadowing.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <span class="risk-badge risk-blue"><span class="risk-dot"></span>Live Governance Dashboard</span>
+              <span class="risk-badge risk-light"><span class="risk-dot"></span>Automated Deal Alerts</span>
+              <span class="risk-badge risk-blue"><span class="risk-dot"></span>CRM / VoIP Integration</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="process-step">
+          <div>
+            <div class="step-num">Phase 03 · Diagnose</div>
+            <h3 class="step-h3">Negotiation Delta Diagnostics  Catch Margin Erosion Before It Costs You</h3>
+            <p class="step-p">The NDD engine cross-checks actual rep behavior against expected governance policy
+              benchmarks. Unauthorized discounting? Skipped qualification gates? Missed suitability assessment? NDD
+              catches them all and automatically deconstructs the change into a structured "Commercial Interference
+              Report" with one-click remediation options.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <span class="risk-badge risk-green"><span class="risk-dot"></span>Automated Leakage Detection</span>
+              <span class="risk-badge risk-blue"><span class="risk-dot"></span>Governance Copilot Reports</span>
+            </div>
+          </div>
+          <div class="step-img-placeholder">
+             <img src="reve12.jpg" alt="Negotiation Delta Diagnostics" class="platform-module-img">
+            <span>Phase 03 · Diagnose</span>
+          </div>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="process-step">
+          <div class="step-img-placeholder">
+             <img src="reve13.jpg" alt="Policy-Inference Autocalibration" class="platform-module-img">
+            <span>Phase 04 · Intervene</span>
+          </div>
+          <div>
+            <div class="step-num">Phase 04 · Intervene</div>
+            <h3 class="step-h3">Agentic Intervention  Policy Enforcement & Discount Blocking</h3>
+            <p class="step-p">When a policy breach is detected, the Qualification-Gated Pricing Engine automatically
+              blocks unauthorized concessions while issuing live "Policy-to-Prompt" guidance to the rep. The system
+              resolves 85% of governance conflicts without requiring manual manager intervention  protecting margins in
+              real time.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <span class="risk-badge risk-blue"><span class="risk-dot"></span>Automated Discount Blocking</span>
+              <span class="risk-badge risk-light"><span class="risk-dot"></span>Live Policy-to-Prompt Guidance</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 5 -->
+        <div class="process-step">
+          <div>
+            <div class="step-num">Phase 05 · Benchmark</div>
+            <h3 class="step-h3">Federated Revenue Benchmarking  Learn From the Best</h3>
+            <p class="step-p">The Community Revenue Intelligence Network enables anonymised "Closing DNA" benchmarks
+              from UK advisory firms to improve predictive governance models continuously. Trends from high-efficiency
+              London-based firms can inform a Manchester consultancy's pricing strategy  without revealing sensitive
+              commercial data.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <span class="risk-badge risk-blue"><span class="risk-dot"></span>Sector-Wide Margin Insights</span>
+              <span class="risk-badge risk-green"><span class="risk-dot"></span>Privacy-Safe Benchmarking</span>
+            </div>
+          </div>
+          <div class="step-img-placeholder">
+             <img src="reve14.jpg" alt="Community Revenue Intelligence Network" class="platform-module-img">
+            <span>Phase 05 · Benchmark</span>
+          </div>
+        </div>
+
+        <!-- Phase 6 -->
+        <div class="process-step">
+          <div class="step-img-placeholder">
+             <img src="reve15.jpg" alt="Revenue Governance Report" class="platform-module-img">
+            <span>Phase 06 · Report</span>
+          </div>
+          <div>
+            <div class="step-num">Phase 06 · Report</div>
+            <h3 class="step-h3">KPI-Style Reporting  From Conversational Data to Strategic Decisions</h3>
+            <p class="step-p">Every insight is delivered as a prioritised, KPI-style Revenue Governance Report  not raw
+              data exports. Sales teams receive Margin Retention Scores, Compliance Readiness metrics, Governance Risk
+              alerts, and ranked action items ready for immediate deployment. All audit-ready for FCA Consumer Duty
+              2025/26 submissions.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <span class="risk-badge risk-blue"><span class="risk-dot"></span>Margin & Governance Scores</span>
+              <span class="risk-badge risk-light"><span class="risk-dot"></span>FCA Audit-Ready Reports</span>
+              <span class="risk-badge risk-green"><span class="risk-dot"></span>Prioritised Action Items</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div><!-- end page process -->
+
+
+  <!-- ═══════════════════════════════════════════
+     PAGE : FAQ
+═══════════════════════════════════════════════ -->
+  <div class="page" id="page-faq">
+    <section
+      style="background:linear-gradient(140deg,#f0f9ff 0%,#e0f2fe 60%,#bae6fd 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+      <div class="container">
+        <div class="label-tag">FAQ</div>
+        <h2 class="section-h2 dark">Frequently Asked Questions</h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-dark" style="max-width:600px;">Everything you need to know about RevenuePilot and what it means
+          for your sales team's governance, compliance, and margin performance in the agentic era.</p>
+      </div>
+    </section>
+
+    <section class="section-light">
+      <div class="container" style="max-width:840px;">
+        <div class="faq-wrap">
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <h4>What is RevenuePilot and why does my sales team need it?</h4><span class="faq-icon">+</span>
+            </div>
+            <div class="faq-body">RevenuePilot is a live Revenue Governance Copilot  an AI-native platform that
+              monitors, governs, and optimises your sales conversations in real time. Unlike passive call recorders
+              (Gong, Chorus) that only show you what went wrong after the deal is signed, RevenuePilot intervenes during
+              the live negotiation  blocking unauthorized discounts, flagging qualification gaps, and providing
+              policy-aligned prompts to your reps. If you're a founder-led firm or consultative agency losing margin to
+              "silent discounting" or struggling to scale without your personal closing logic, RevenuePilot is
+              purpose-built for you.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <h4>How is RevenuePilot different from Gong or Chorus?</h4><span class="faq-icon">+</span>
+            </div>
+            <div class="faq-body">Gong and Chorus are retrospective tools  they record and summarise calls after the
+              fact, creating a "forensic management" bottleneck. RevenuePilot operates in real time, using the
+              Behavior-to-Outcome Governance Graph to intervene before an unauthorized concession becomes a binding
+              liability. Our Negotiation Delta Diagnostics (NDD) identifies root causes of margin erosion
+              mid-conversation, while our Qualification-Gated Pricing Engine actually blocks discount requests until
+              specific suitability gates are met. No competitor currently offers this live enforcement layer.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <h4>What does "Closing DNA" mean and how does RevenuePilot preserve it?</h4><span
+                class="faq-icon">+</span>
+            </div>
+            <div class="faq-body">Your "Closing DNA" is the proprietary negotiation logic, objection-handling
+              frameworks, and value-anchoring strategies that your best closers  often the founder  use instinctively.
+              When those people leave or step back, that institutional knowledge is lost. RevenuePilot uses the
+              Revenue-Quality Ontology (RQO) to systematically capture and encode this logic, transforming it into
+              automated Policy-to-Prompt pathways that new representatives can immediately leverage  reaching
+              "quota-ready proficiency" in 12 days vs. a historical average of 34 days.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <h4>How does RevenuePilot help with FCA Consumer Duty compliance?</h4><span class="faq-icon">+</span>
+            </div>
+            <div class="faq-body">The 2025/26 FCA Consumer Duty requires firms to evidence "good outcomes" and auditable
+              decision-making for every client interaction. RevenuePilot's Refusal Summary and Intent Clarification
+              logic automatically documents when and why a prospect declines an offer, creating a transparent,
+              verifiable audit trail of ethical, suitability-based selling. Every automated prompt is "explainable" 
+              managers can trace exactly why a governance intervention was triggered, satisfying both FCA audit
+              requirements and ICO data protection guidelines.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <h4>What communication stacks and CRMs does RevenuePilot integrate with?</h4><span
+                class="faq-icon">+</span>
+            </div>
+            <div class="faq-body">RevenuePilot is designed as a stack-agnostic governance layer, sitting above any
+              existing communication or CRM infrastructure. Current integrations include Zoom, Microsoft Teams, Google
+              Meet, HubSpot, Salesforce, and Pipedrive. Our Secure Connector API enables custom connectivity with
+              bespoke dialers and billing systems. One-time Secure Connector setup fees range from £600–£1,500 depending
+              on stack complexity.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <h4>What results have pilot firms seen from RevenuePilot?</h4><span class="faq-icon">+</span>
+            </div>
+            <div class="faq-body">In an 8-week pilot across 12 London and Manchester-based consultative sales teams,
+              participating firms saw a 22–25% average increase in retained gross margin through automated
+              value-anchoring prompts and discount gating. Qualification accuracy improved by 18–19% through NDD
+              calibration. User satisfaction scored 4.7/5 for "Commercial Logic Protection" and 4.5/5 for "Regulatory
+              Audit Readiness." New sales reps reached quota-ready proficiency in 12 days vs. the sector average of 34
+              days.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <h4>Is RevenuePilot suitable for my business size?</h4><span class="faq-icon">+</span>
+            </div>
+            <div class="faq-body">RevenuePilot is specifically designed for UK SME professional service firms,
+              founder-led high-ticket agencies, property education groups, and mid-market consultative businesses 
+              sectors currently underserved by high-cost, inflexible enterprise CRM suites. Our Starter plan begins at
+              £59/user/month for independent closers and solo founders, scaling to our Enterprise plan at
+              £299/user/month for large advisory networks. The platform is built to be modular and low-friction  you
+              can start with basic behaviour monitoring and scale to full automated governance as your team grows.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- end page faq -->
+
+
+  <!-- ═══════════════════════════════════════════
+     PAGE : PRICING
+═══════════════════════════════════════════════ -->
+  <div class="page" id="page-pricing">
+    <section
+      style="background:linear-gradient(140deg,#f0f9ff 0%,#e0f2fe 50%,#bae6fd 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+      <div class="container">
+        <div class="label-tag">Pricing</div>
+        <h2 class="section-h2 dark">Governance-as-a-Service.<br><span style="color:var(--blue-dark);">Scale at Your Own
+            Pace.</span></h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-dark" style="max-width:600px;">SME-optimised tiered SaaS pricing that scales alongside your
+          organisation's deal volume and team complexity  from basic behaviour monitoring to full-spectrum automated
+          policy enforcement and governance.</p>
+      </div>
+    </section>
+
+    <section class="section-light">
+      <div class="container">
+        <div class="pricing-grid">
+          <!-- STARTER -->
+          <div class="price-card">
+            <div class="price-tier">Tier 01</div>
+            <div class="price-title">Starter</div>
+            <div class="price-amount">£59<span>/user/mo</span></div>
+            <p class="price-desc">For independent closers, solo founders, and boutique agencies getting started with
+              revenue governance.</p>
+            <ul class="price-features">
+              <li>Basic behaviour monitoring & risk alerts</li>
+              <li>"Closing DNA" visualisation dashboard</li>
+              <li>Infrastructure-agnostic mapping (1 category type)</li>
+              <li>Basic Refusal Summary logging</li>
+              <li>Stack-agnostic Zoom/Teams integration</li>
+              <li>Email support</li>
+            </ul>
+            <button class="btn-secondary" style="width:100%;justify-content:center;" onclick="showPage('contact')">Get
+              Started</button>
+          </div>
+          <!-- PROFESSIONAL -->
+          <div class="price-card featured">
+            <div class="featured-label">Most Popular</div>
+            <div class="price-tier">Tier 02</div>
+            <div class="price-title">Professional</div>
+            <div class="price-amount">£159<span>/user/mo</span></div>
+            <p class="price-desc">For mid-market consultative agencies and regional advisory hubs requiring full
+              governance capabilities.</p>
+            <ul class="price-features">
+              <li>Full Negotiation Delta Diagnostics (NDD)</li>
+              <li>Signal-to-Prompt Auto-Synthesis</li>
+              <li>Zoom, Teams & HubSpot/Salesforce integrations</li>
+              <li>Qualification-Gated Pricing Engine</li>
+              <li>Revenue-Quality Ontology (RQO) access</li>
+              <li>FCA Consumer Duty Audit Prep reporting</li>
+              <li>Priority support</li>
+            </ul>
+            <button class="btn-primary" style="width:100%;justify-content:center;" onclick="showPage('contact')">Book a
+              Demo</button>
+          </div>
+          <!-- ENTERPRISE -->
+          <div class="price-card">
+            <div class="price-tier">Tier 03</div>
+            <div class="price-title">Enterprise</div>
+            <div class="price-amount">£299<span>/user/mo</span></div>
+            <p class="price-desc">For large advisory networks, franchises, and high-compliance firms requiring the full
+              governance infrastructure.</p>
+            <ul class="price-features">
+              <li>Behavior-to-Outcome Governance Graph</li>
+              <li>Secure Connector Setup included</li>
+              <li>Full RQO + Policy-Inference Autocalibration</li>
+              <li>Community Revenue Intelligence Network access</li>
+              <li>Commercial Stewardship Index (CSI) reports</li>
+              <li>Dedicated Customer Success Manager</li>
+              <li>Advanced FCA Compliance Audit Pack</li>
+            </ul>
+            <button class="btn-secondary" style="width:100%;justify-content:center;"
+              onclick="showPage('contact')">Contact Sales</button>
+          </div>
+        </div>
+
+        <!-- Additional Services -->
+        <div style="margin-top:60px;">
+          <div class="label-tag">Professional Add-Ons</div>
+          <h2 class="section-h2 dark" style="margin-bottom:10px;">Additional Revenue Services</h2>
+          <div class="section-divider divider-blue"></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:32px;" class="addons-grid">
+            <div class="why-card">
+              <div class="why-icon"><i class="fas fa-plug"></i></div>
+              <h4>Secure Connector Setup</h4>
+              <p>One-time setup fee for high-fidelity API connectivity and CRM logic synchronisation with your existing
+                stack.</p>
+              <p style="margin-top:12px;font-family:var(--mono);font-size:13px;color:var(--blue-dark);font-weight:700;">
+                £600 – £1,500</p>
+            </div>
+            <div class="why-card">
+              <div class="why-icon"><i class="fas fa-users-cog"></i></div>
+              <h4>Professional Services</h4>
+              <p>Implementation support, representative training, and "Closing DNA" orchestration setups for smooth
+                onboarding.</p>
+              <p style="margin-top:12px;font-family:var(--mono);font-size:13px;color:var(--blue-dark);font-weight:700;">
+                £500 – £2,500</p>
+            </div>
+            <div class="why-card">
+              <div class="why-icon"><i class="fas fa-chart-pie"></i></div>
+              <h4>Revenue-Quality Audit</h4>
+              <p>Specialised multi-team baseline commercial logic validation and advanced sector benchmarking insights
+                reports.</p>
+              <p style="margin-top:12px;font-family:var(--mono);font-size:13px;color:var(--blue-dark);font-weight:700;">
+                £1,200 – £4,500/yr</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- end page pricing -->
+
+
+  <!-- ═══════════════════════════════════════════
+     PAGE : CONTACT
+═══════════════════════════════════════════════ -->
+  <div class="page" id="page-contact">
+    <section
+      style="background:linear-gradient(140deg,#f0f9ff 0%,#e0f2fe 50%,#bae6fd 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+      <div class="container">
+        <div class="label-tag">Contact</div>
+        <h2 class="section-h2 dark">Request a Revenue Governance Demo</h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-dark" style="max-width:600px;">Our personalised demos show your sales team's actual governance
+          baseline, deal drift scores, and margin retention dashboard live  using your real commercial context, not
+          generic examples or static presentations.</p>
+      </div>
+    </section>
+
+    <section class="section-light">
+      <div class="container">
+        <div class="contact-wrap">
+          <!-- CONTACT FORM -->
+          <div class="contact-form">
+            <h3>Book Your Platform Demo</h3>
+            <p>Fill in your details and our Revenue Success team will contact you within 24 hours.</p>
+            <form action="https://api.web3forms.com/submit" method="POST">
+              <input type="hidden" name="access_key" value="bc85072d-a6a7-4744-8f5c-53faa2b7e11e">
+              <input type="hidden" name="subject" value="New RevenuePilot Demo Request">
+              <input type="hidden" name="from_name" value="RevenuePilot Website">
+              <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" name="name" placeholder="Your full name" required>
+              </div>
+              <div class="form-group">
+                <label>Email Address *</label>
+                <input type="email" name="email" placeholder="your@company.co.uk" required>
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" name="phone" placeholder="+44 7XXX XXXXXX">
+              </div>
+              <div class="form-group">
+                <label>Company / Agency Name</label>
+                <input type="text" name="company" placeholder="Your company or advisory group name">
+              </div>
+              <div class="form-group">
+                <label>Business Type</label>
+                <select name="business_type">
+                  <option>Founder-led High-Ticket Agency</option>
+                  <option>Property Education Group</option>
+                  <option>Financial Advisory Firm</option>
+                  <option>Mid-Market Consultative Agency</option>
+                  <option>B2B Services Organisation</option>
+                  <option>Independent Sales Closer</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>What are you most interested in?</label>
+                <textarea name="message"
+                  placeholder="Tell us about your governance challenges, sales systems, or the features you'd like to explore  e.g. margin protection, FCA compliance, closing DNA preservation..."
+                  required></textarea>
+              </div>
+              <button class="btn-primary" style="width:100%;justify-content:center;" type="submit">Request Demo
+                →</button>
+            </form>
+          </div>
+
+          <!-- CONTACT INFO -->
+          <div class="contact-info">
+            <h3>Why Book a Demo?</h3>
+            <p>Our personalised demos show your sales team's actual governance baseline, Negotiation Delta Diagnostics
+              output, and Revenue-Quality Ontology mapping using your real commercial context  not generic examples. We
+              demonstrate how the Behavior-to-Outcome Governance Graph, Qualification-Gated Pricing Engine, and
+              Policy-Inference Autocalibration work together to reduce margin leakage, protect pricing discipline,
+              ensure FCA compliance, and clone your Closing DNA at scale. Every demo is tailored to your firm's sales
+              methodology, deal complexity, and operational challenges.</p>
+
+            <div class="contact-detail">
+              <div class="icon"><i class="fas fa-envelope"></i></div>
+              <div class="text">
+                <strong>Email Us</strong>
+                <span>revenuepiliotuk@outlook.com</span>
+              </div>
+            </div>
+            <div class="contact-detail">
+              <div class="icon"><i class="fas fa-phone"></i></div>
+              <div class="text">
+                <strong>Phone</strong>
+                <span>+44 7384 182486 · Waseem Arshad</span>
+              </div>
+            </div>
+            <div class="contact-detail">
+              <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div class="text">
+                <strong>UK Headquarters</strong>
+                <span>London, United Kingdom</span>
+              </div>
+            </div>
+            <div class="contact-detail">
+              <div class="icon"><i class="fas fa-clock"></i></div>
+              <div class="text">
+                <strong>Response Time</strong>
+                <span>Within 24 hours · Mon–Fri 9am–6pm GMT</span>
+              </div>
+            </div>
+            <div class="contact-detail">
+              <div class="icon"><i class="fas fa-shield-alt"></i></div>
+              <div class="text">
+                <strong>Data Privacy</strong>
+                <span>UK GDPR · ICO Compliant · FCA Consumer Duty Aligned</span>
+              </div>
+            </div>
+            <div class="contact-detail">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- end page contact -->
+
+
+  <!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">RevenuePilot</div>
+          <p class="footer-desc">The UK's first AI-Native Revenue Governance Copilot  monitoring, governing, and
+            optimising every sales conversation in real time. Enforce. Govern. Scale. Zero Leakage. Maximum Revenue.
+            Institutional Equity.</p>
+          <div class="footer-badges">
+            <span class="footer-badge">UK GDPR Compliant</span>
+            <span class="footer-badge">FCA Consumer Duty Aligned</span>
+            <span class="footer-badge">ICO Registered</span>
+            <span class="footer-badge">ESG Impact</span>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Platform</div>
+          <div class="footer-col">
+            <a onclick="showPage('platform')">Behavior-to-Outcome Graph</a>
+            <a onclick="showPage('platform')">Revenue-Quality Ontology</a>
+            <a onclick="showPage('platform')">Negotiation Delta Diagnostics</a>
+            <a onclick="showPage('platform')">Qualification-Gated Pricing</a>
+            <a onclick="showPage('platform')">Policy-Inference Autocalibration</a>
+            <a onclick="showPage('platform')">Community Revenue Network</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Company</div>
+          <div class="footer-col">
+            <a onclick="showPage('about')">About RevenuePilot</a>
+            <a onclick="showPage('about')">Waseem Arshad · Founder & CEO</a>
+            <a onclick="showPage('process')">How It Works</a>
+            <a onclick="showPage('faq')">FAQ</a>
+            <a onclick="showPage('market')">Market Analysis</a>
+            <a onclick="showPage('pricing')">Pricing & Plans</a>
+            <a onclick="showPage('contact')">Request a Demo</a>
+            <a onclick="showPage('contact')">Pilot Programme</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Solutions</div>
+          <div class="footer-col">
+            <a onclick="showPage('platform')">Founder-led High-Ticket Agencies</a>
+            <a onclick="showPage('platform')">Property Education Groups</a>
+            <a onclick="showPage('platform')">Financial Advisory Firms</a>
+            <a onclick="showPage('platform')">Mid-Market Consultancies</a>
+            <a onclick="showPage('pricing')">Starter · £59/user/mo</a>
+            <a onclick="showPage('pricing')">Professional · £159/user/mo</a>
+            <a onclick="showPage('pricing')">Enterprise · £299/user/mo</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom-bar">
+        <p>© 2026 <span>RevenuePilot</span> · London, UK · UK GDPR Compliant · by Waseem Arshad</p>
+        <div class="footer-bottom-links">
+          <a onclick="showPage('contact')">Privacy Policy</a>
+          <a onclick="showPage('contact')">Terms of Service</a>
+          <a onclick="showPage('contact')">Confidential Business Plan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ═══════════ JAVASCRIPT ═══════════ -->
+  <script>
+    /* ─── PAGE NAV ───────────────────────────────── */
+    function showPage(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+      const pg = document.getElementById('page-' + name);
+      if (pg) { pg.classList.add('active'); }
+      const btn = document.getElementById('nav-' + name);
+      if (btn) { btn.classList.add('active'); }
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      if (name === 'market' && !window.marketChartsLoaded) { initMarketCharts(); window.marketChartsLoaded = true; }
+    }
+
+    function toggleCard(btn) {
+      const card = btn.closest('.platform-card');
+      card.classList.toggle('open');
+      btn.innerHTML = card.classList.contains('open') ? 'Show Less' : 'Learn More';
+    }
+
+    function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
+
+    function closeMobile() {
+      document.getElementById('mobileNav').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+    }
+
+    document.getElementById('hamburger').addEventListener('click', function () {
+      this.classList.toggle('open');
+      document.getElementById('mobileNav').classList.toggle('open');
+    });
+
+    /* ─── CHART THEME ────────────────────────────── */
+    const BLU = 'rgba(2,132,199,1)';
+    const BLU2 = 'rgba(2,132,199,0.7)';
+    const BLU3 = 'rgba(2,132,199,0.35)';
+    const LBLU = 'rgba(14,165,233,0.8)';
+    const LBLU2 = 'rgba(186,230,253,0.7)';
+    const GRID = 'rgba(2,132,199,0.08)';
+    const MUTED = 'rgba(7,89,133,0.8)';
+
+    Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+    Chart.defaults.font.size = 11;
+    Chart.defaults.color = MUTED;
+
+    /* ─── MARKET CHARTS ──────────────────────────── */
+    function initMarketCharts() {
+      // UK High-Ticket Advisory Market by Segment
+      new Chart(document.getElementById('chartSector').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['Property Education', 'Financial Advisory', 'B2B Consultancies', 'High-Ticket Agencies'],
+          datasets: [{
+            label: 'SAM (£ Millions)',
+            data: [140, 95, 120, 75],
+            backgroundColor: [BLU, BLU2, BLU3, LBLU],
+            borderRadius: 6, barPercentage: 0.6
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: MUTED } }, y: { grid: { color: GRID }, ticks: { color: MUTED, callback: v => '£' + v + 'M' } } } }
+      });
+
+      // Pain Points Doughnut
+      new Chart(document.getElementById('chartRootCause').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Unmanaged Silent Discounting (81%)', 'No Live Governance Capability (88%)', 'Founder DNA Lost on Scale (96%)', 'FCA Compliance Gaps (70%)', 'Manual Post-Call Review (87%)'],
+          datasets: [{
+            data: [81, 88, 96, 70, 87],
+            backgroundColor: [BLU, BLU2, BLU3, LBLU, LBLU2],
+            borderWidth: 1.5
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: MUTED, boxWidth: 10, padding: 10, font: { size: 10 } } } } }
+      });
+
+      // Radar Competitive
+      new Chart(document.getElementById('chartRadar').getContext('2d'), {
+        type: 'radar',
+        data: {
+          labels: ['Live Negotiation Inference', 'Qualification-Gated Pricing', 'FCA Compliance Automation', 'Founder DNA Cloning', 'Federated Benchmarking', 'UK 2025/26 Tuning'],
+          datasets: [
+            { label: 'RevenuePilot', data: [5, 5, 5, 5, 5, 5], backgroundColor: 'rgba(2,132,199,0.1)', borderColor: BLU, borderWidth: 2, pointBackgroundColor: BLU },
+            { label: 'Gong / Chorus', data: [2, 1, 1, 1, 1, 2], backgroundColor: 'rgba(14,165,233,0.06)', borderColor: LBLU, borderWidth: 1.5, pointBackgroundColor: LBLU },
+            { label: 'Salesforce / HubSpot', data: [1, 2, 1, 1, 1, 1], backgroundColor: 'rgba(186,230,253,0.05)', borderColor: 'rgba(14,165,233,0.5)', borderWidth: 1.5, pointBackgroundColor: 'rgba(14,165,233,0.5)' },
+            { label: 'Manual Shadowing', data: [1, 1, 1, 2, 1, 1], backgroundColor: 'rgba(7,89,133,0.05)', borderColor: 'rgba(7,89,133,0.4)', borderWidth: 1.5, pointBackgroundColor: 'rgba(7,89,133,0.4)' },
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: MUTED, boxWidth: 10, padding: 14, font: { size: 10 } } } }, scales: { r: { backgroundColor: 'rgba(2,132,199,0.01)', grid: { color: GRID }, pointLabels: { color: MUTED, font: { size: 10 } }, ticks: { display: false }, min: 0, max: 5 } } }
+      });
+
+      // Market Growth
+      new Chart(document.getElementById('chartGrowth').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['2022', '2023', '2024', '2025', '2026', '2027', '2028', '2030'],
+          datasets: [
+            { label: 'Global AI Revenue Intelligence Market (USD B)', data: [7, 10, 14.8, 18.6, 26, 36, 50, 88], backgroundColor: BLU2, borderRadius: 5, barPercentage: 0.55 },
+            { type: 'line', label: 'UK AI Governance Adoption %', data: [null, 2, 4, 8, 16, 26, 40, 60], borderColor: LBLU, borderWidth: 2, yAxisID: 'y2', tension: 0.4, pointBackgroundColor: LBLU, fill: false }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: MUTED, boxWidth: 10, padding: 12, font: { size: 10 } } } }, scales: { x: { grid: { color: GRID }, ticks: { color: MUTED } }, y: { grid: { color: GRID }, ticks: { color: MUTED, callback: v => '$' + v + 'B' } }, y2: { position: 'right', grid: { display: false }, ticks: { color: MUTED, callback: v => v + '%' } } } }
+      });
+
+      // Performance Comparison
+      new Chart(document.getElementById('chartPerf').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['Live Negotiation Inference', 'Qualification-Gated Pricing', 'FCA Compliance Automation', 'Founder DNA Cloning', 'Federated Benchmarking', 'UK Regulatory Coverage'],
+          datasets: [
+            { label: 'RevenuePilot', data: [98, 97, 99, 96, 93, 98], backgroundColor: BLU2, borderRadius: 5, barPercentage: 0.35 },
+            { label: 'Legacy Market Average', data: [4, 3, 4, 2, 1, 3], backgroundColor: LBLU2, borderRadius: 5, barPercentage: 0.35 }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: MUTED, boxWidth: 10, padding: 14, font: { size: 10 } } } }, scales: { x: { grid: { color: GRID }, ticks: { color: MUTED, font: { size: 9 } } }, y: { grid: { color: GRID }, ticks: { color: MUTED, callback: v => v + ' pts' } } } }
+      });
+    }
+  </script>
+</body>
+
+</html>
